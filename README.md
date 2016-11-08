@@ -25,7 +25,7 @@ Output of `head ./bashttpd.sh`:
     #
     #  A janky HTTP server written in Bash.
 
-The example commands a the top of the script each starts ./bashttpd and binds it port 5250. Make sure the script is executable first.
+The example commands a the top of the script each starts `bashttpd.sh` and binds it port 5250. Make sure the script is executable first.
 After the server is running, you can access the contents of the directory you started it in, from your browser:
 
     http://127.0.0.1:5250
@@ -123,5 +123,6 @@ Testimonials
 
   ***--- avleen, BasHTTPd Creator***
 
-*"What is that? Wait a server written in bash. What an abomination!"
-  ***--- anonymous "fan"
+*"What is that? Wait a server written in bash. What an abomination!"*
+
+  ***--- anonymous "fan"***
