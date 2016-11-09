@@ -1,4 +1,7 @@
 # BasHTTPd
+[![Build Status](https://travis-ci.org/AjankeFoundation/bashttpd.svg?branch=master)](https://travis-ci.org/AjankeFoundation/bashttpd)
+[![GitHub version](https://badge.fury.io/gh/codrcodz%2Fnumber-namer.svg)](https://badge.fury.io/gh/codrcodz%2Fnumber-namer)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/codrcodz/number-namer/master/LICENSE)
 ## *A janky web server written in Bash*
 
 Requirements
