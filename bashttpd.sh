@@ -42,8 +42,8 @@
 
 # Some versions of netcat direct stdout AND stderr to the client.
 # You can turn off logging by setting LOG to "0".
-  #LOG=0
   LOG=1
+  #LOG=0
 
 #---------------------------------#
 # TIER 1: DATA DELIVERY FUNCTIONS |
