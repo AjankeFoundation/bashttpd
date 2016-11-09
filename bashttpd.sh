@@ -3,9 +3,9 @@
 # Ajanke BasHTTPd Webserver |
 #----------------------------------------------------------------------
 #  
-#  tcpserver -c 10 127.0.0.1 5250 ./bashttpd.sh
-#  socat TCP4-LISTEN:5250,fork EXEC:./bashttpd.sh
-#  netcat -l -p 5250 -e ./bashttpd.sh & #Set LOG=0 in script for netcat
+#  tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh
+#  socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
+#  netcat -l -p 2274 -e ./bashttpd.sh & #Set LOG=0 in script for netcat
 #
 #  A janky HTTP server written in Bash.
 #  
