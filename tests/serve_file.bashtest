@@ -1,4 +1,4 @@
-$ curl 127.0.0.1:2274/tests/files/index.html
+$ curl -s 127.0.0.1:2274/tests/files/index.html
 <html>
 <h1>This is the content of index.html</h1>
 </html>
