@@ -4,20 +4,8 @@ language:
 before_script:
   - sudo apt-get update
   - sudo easy_install bashtest
-  - sudo chmod +x ./bashttpd.sh
-  - sudo apt-get install ucspi-tcp
+  - sudo chmod +x ./namer.sh
 
 script:
-  - tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh &
-  - bashtest ./tests/serve_file.bashtest
-  - bashtest ./tests/serve_dirlist.bashtest
-  - kill $(pidof tcpserver)
-  - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh &
-  - bashtest ./tests/serve_file.bashtest
-  - bashtest ./tests/serve_dirlist.bashtest
-  - kill $(pidof socat)
-  - sed -ie 's/#LOG=0/LOG=0/' ./bashttpd.sh
-  - netcat -l -p 2274 -e ./bashttpd.sh &
-  - bashtest ./tests/serve_file.bashtest
-  - bashtest ./tests/serve_dirlist.bashtest
-  
+  - bashtest ./test/digit-test.bashtest
+  - bashtest ./test/alpha-test.bashtest
