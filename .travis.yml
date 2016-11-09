@@ -19,4 +19,5 @@ script:
   - sed -ie 's/#LOG=0/LOG=0/' ./bashttpd.sh
   - netcat -l -p 2274 -e ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
+  - netcat -l -p 2274 -e ./bashttpd.sh &
   - bashtest ./tests/serve_dir_list.bashtest
