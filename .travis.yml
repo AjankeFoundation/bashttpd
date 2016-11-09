@@ -6,6 +6,8 @@ before_script:
   - sudo easy_install bashtest
   - sudo chmod +x ./bashttpd.sh
   - sudo apt-get install ucspi-tcp
+  - sudo apt-get install socat
+  - sudo apt-get install netcat-traditional
 
 script:
   - tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh &
