@@ -19,16 +19,16 @@ Output of `head ./bashttpd.sh`:
     # Ajanke BasHTTPd Webserver |
     #----------------------------------------------------------------------
     #
-    #  tcpserver -c 10 127.0.0.1 5250 ./bashttpd.sh
-    #  socat TCP4-LISTEN:5250,fork EXEC:./bashttpd.sh
-    #  netcat -l -p 5250 -e ./bashttpd.sh & #Set LOG=0 in script for netcat
+    #  tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh
+    #  socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
+    #  netcat -l -p 2274 -e ./bashttpd.sh & #Set LOG=0 in script for netcat
     #
     #  A janky HTTP server written in Bash.
 
-The example commands a the top of the script each starts `bashttpd.sh` and binds it port 5250. Make sure the script is executable first.
+The example commands a the top of the script each starts `bashttpd.sh` and binds it port 2274. Make sure the script is executable first.
 After the server is running, you can access the contents of the directory you started it in, from your browser:
 
-    http://127.0.0.1:5250
+    http://127.0.0.1:2274
 
 Note that in the `netcat` example above, the web server will only accept a single connection, then close when the script exits. 
 This is only good for testing, and/or serving a single file. If you want the ability to navigate directories...`socat`/`tcpserver`.
@@ -69,19 +69,19 @@ Getting started
   
   4. Run bashttpd using your TCP server of choice:
   
-          tcpserver 127.0.0.1 8080 ./bashttpd.sh
+          tcpserver 127.0.0.1 2274 ./bashttpd.sh
 
       OR 
 
-          socat TCP4-LISTEN:5250,fork EXEC:./bashttpd.sh
+          socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
 
       OR         
       
-          netcat -lp 8080 -e ./bashttpd.sh
+          netcat -lp 2274 -e ./bashttpd.sh
   
   5. Test it in your browser or with curl by visiting the local URL
   
-          http://127.0.0.1:5250
+          http://127.0.0.1:2274
 
       You should see the contents of that directory.
       
