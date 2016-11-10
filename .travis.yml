@@ -1,4 +1,3 @@
-
 language:
   - bash
 
@@ -18,7 +17,7 @@ script:
   - kill $(pidof tcpserver)
   - which socat
   - socat -h
-  - socat TCP4-LISTEN:2274,fork CWEXEC:./bashttpd.sh
+  - socat TCP4-LISTEN,CHILD:2274 EXEC:./bashttpd.sh
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - kill $(pidof socat)
