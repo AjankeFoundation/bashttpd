@@ -1,7 +1,6 @@
 os:
-  matrix:
-    - linux
-    - osx
+  - linux
+  - osx
 
 language:
   - bash
