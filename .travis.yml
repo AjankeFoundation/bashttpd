@@ -23,7 +23,7 @@ before_install:
       sudo docker run -d -p 127.0.0.1:80:2274 centos:latest;
       sudo docker exec /bin/sh -c " \
           useradd bashttpd -G wheel; \
-          echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers \
+          echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
           sudo yum update; \
       ";
     fi
