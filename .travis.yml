@@ -1,4 +1,3 @@
-
 os:
   - osx
 
@@ -19,15 +18,13 @@ script:
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - killall tcpserver
-  - which socat
-  - socat -h
+  - ps | grep "2274"
   - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - killall socat
   - sed -ie 's/#LOG=0/LOG=0/' ./bashttpd.sh
   - which netcat
-  - netcat --help
   - netcat -l -p 2274 -e ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
   - netcat -l -p 2274 -e ./bashttpd.sh &
