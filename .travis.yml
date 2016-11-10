@@ -6,7 +6,6 @@ language:
   - bash
 
 before_script:
-  - su travis
   - brew update
   - easy_install bashtest
   - chmod +x ./bashttpd.sh
