@@ -14,8 +14,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 
       sudo apt-get update;
-      docker pull centos/centos:latest
-      docker run -d -p 127.0.0.1:2274:2274 centos/centos:latest /bin/sh -c "cd ~; git clone https://github.com/AjankeFoundation/bashttpd.git;" 
+      docker pull centos/centos:latest;
+      docker run -d -p 127.0.0.1:2274:2274 centos/centos:latest /bin/sh -c "cd ~; git clone https://github.com/AjankeFoundation/bashttpd.git;"; 
     fi
 
 install:
