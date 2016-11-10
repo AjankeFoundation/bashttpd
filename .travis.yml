@@ -6,52 +6,19 @@ language:
   - bash
 
 before_install:
-    # Mac OSX Environment Setup
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew update;
-    fi
-    # Ubuntu Environment Setup
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 
-      sudo apt-get update;
-    fi
-    # RHEL Environment Setup
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then 
-      sudo apt-get install docker;
-      sudo service docker start;
-      sudo apt-get install ucspi-tcp;
-      sudo docker pull centos:latest;
-      sudo docker run -d -p 127.0.0.1:80:2274 centos:latest;
-      sudo docker exec /bin/sh -c " \
-          useradd bashttpd -G wheel; \
-          echo "%wheel ALL=\(ALL\) NOPASSWD:ALL" >> /etc/sudoers; \
-          sudo yum update; \
-      ";
-    fi
-
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew install ucspi-tcp;
-      sudo easy_install bashtest;
-      chmod +x ./bashttpd.sh;
-    fi
-    # Ubuntu
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo apt-get install ucspi-tcp;
-      sudo easy_install bashtest;
-    fi
-    # RHEL 
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      sudo docker exec /bin/sh -c -u bashttpd " \
-          sudo yum install epel-release; \
-          sudo yum install git; \
-          sudo git clone https://github.com/AjankeFoundation/bashttpd.git /home/bashttpd; \
-          sudo yum install ucspi-tcp; \
-          sudo easy_install bashtest; \
-      ";
-    fi
-
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ucspi-tcp; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]];then sudo apt-get install ucspi-tcp; fi
+  - sudo easy_install bashtest
+  - chmod +x ./bashttpd.sh
+  
+before_script:
+  - which tcpserver
+  - which bashtest
+  
 script:
   - tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
-  
