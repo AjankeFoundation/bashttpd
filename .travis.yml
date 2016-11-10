@@ -14,7 +14,7 @@ script:
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - kill $(pidof tcpserver)
-  - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh &
+  - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - kill $(pidof socat)
