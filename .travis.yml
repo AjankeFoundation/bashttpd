@@ -5,7 +5,7 @@ language:
   - bash
 
 before_script:
-  - brew update
+  - sudo brew update
   - sudo easy_install bashtest
   - sudo chmod +x ./bashttpd.sh
   - sudo brew install ucspi-tcp
