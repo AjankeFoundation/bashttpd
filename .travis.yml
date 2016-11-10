@@ -12,20 +12,19 @@ before_script:
   - brew install ucspi-tcp
   - brew install socat
   - brew install netcat
-  - brew install pidof
 
 script:
   - which tcpserver
   - tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
-  - kill $(pidof tcpserver)
+  - killall tcpserver
   - which socat
   - socat -h
   - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
-  - kill $(pidof socat)
+  - killall socat
   - sed -ie 's/#LOG=0/LOG=0/' ./bashttpd.sh
   - which netcat
   - netcat --help
