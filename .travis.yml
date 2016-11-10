@@ -12,6 +12,7 @@ before_script:
   - brew install ucspi-tcp
   - brew install socat
   - brew install netcat
+  - brew install pidof
 
 script:
   - which tcpserver
