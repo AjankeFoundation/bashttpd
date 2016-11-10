@@ -1,13 +1,16 @@
+os:
+  - osx
+
 language:
   - bash
 
 before_script:
-  - sudo apt-get update
+  - brew update
   - sudo easy_install bashtest
   - sudo chmod +x ./bashttpd.sh
-  - sudo apt-get install ucspi-tcp
-  - sudo apt-get install socat
-  - sudo apt-get install netcat-traditional
+  - sudo brew install ucspi-tcp
+  - sudo brew install socat
+  - sudo brew install netcat
 
 script:
   - which tcpserver
@@ -17,14 +20,14 @@ script:
   - kill $(pidof tcpserver)
   - which socat
   - socat -h
-  - socat TCP4-LISTEN:2274,CHILD EXEC:./bashttpd.sh
+  - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - kill $(pidof socat)
   - sed -ie 's/#LOG=0/LOG=0/' ./bashttpd.sh
-  - which netcat-traditional
-  - netcat-traditional --help
-  - netcat-traditional -l -p 2274 -e ./bashttpd.sh &
+  - which netcat
+  - netcat --help
+  - netcat -l -p 2274 -e ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
   - netcat -l -p 2274 -e ./bashttpd.sh &
   - bashtest ./tests/serve_dir_list.bashtest
