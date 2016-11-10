@@ -12,21 +12,20 @@ before_script:
 
 script:
   - which tcpserver
-  - tcpserver --help
   - tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - kill $(pidof tcpserver)
   - which socat
-  - socat --help
-  - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
+  - socat -h
+  - socat TCP4-LISTEN:2274,fork CWEXEC:./bashttpd.sh
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
   - kill $(pidof socat)
   - sed -ie 's/#LOG=0/LOG=0/' ./bashttpd.sh
-  - which netcat
-  - netcat --help
-  - netcat -l -p 2274 -e ./bashttpd.sh &
+  - which netcat-traditional
+  - netcat-traditional --help
+  - netcat-traditional -l -p 2274 -e ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
   - netcat -l -p 2274 -e ./bashttpd.sh &
   - bashtest ./tests/serve_dir_list.bashtest
