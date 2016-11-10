@@ -1,3 +1,4 @@
+
 os:
   - osx
 
@@ -5,12 +6,13 @@ language:
   - bash
 
 before_script:
-  - sudo brew update
-  - sudo easy_install bashtest
-  - sudo chmod +x ./bashttpd.sh
-  - sudo brew install ucspi-tcp
-  - sudo brew install socat
-  - sudo brew install netcat
+  - su travis
+  - brew update
+  - easy_install bashtest
+  - chmod +x ./bashttpd.sh
+  - brew install ucspi-tcp
+  - brew install socat
+  - brew install netcat
 
 script:
   - which tcpserver
