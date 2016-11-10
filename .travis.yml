@@ -19,7 +19,7 @@ before_install:
       sudo apt-get install docker;
       sudo service docker start;
       sudo apt-get install ucspi-tcp;
-      sudo docker pull centos/centos:latest;
+      sudo docker pull centos:latest;
       sudo docker run -d -p 127.0.0.1:80:2274 centos:latest;
       sudo docker exec /bin/sh -c " \
           useradd bashttpd -G wheel; \
