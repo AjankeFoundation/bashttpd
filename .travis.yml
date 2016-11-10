@@ -12,7 +12,7 @@ before_install:
 install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install ucspi-tcp; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]];then sudo apt-get install ucspi-tcp; fi
-  - easy_install bashtest
+  - sudo easy_install bashtest
   - chmod +x ./bashttpd.sh
   
 before_script:
