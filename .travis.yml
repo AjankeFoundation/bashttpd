@@ -9,23 +9,10 @@ before_script:
   - easy_install bashtest
   - chmod +x ./bashttpd.sh
   - brew install ucspi-tcp
-  - brew install socat
-  - brew install netcat
 
 script:
   - which tcpserver
   - tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh &
   - bashtest ./tests/serve_file.bashtest
   - bashtest ./tests/serve_dir_list.bashtest
-  - killall tcpserver
-  - ps | grep "2274"
-  - socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
-  - bashtest ./tests/serve_file.bashtest
-  - bashtest ./tests/serve_dir_list.bashtest
-  - killall socat
-  - sed -ie 's/#LOG=0/LOG=0/' ./bashttpd.sh
-  - which netcat
-  - netcat -l -p 2274 -e ./bashttpd.sh &
-  - bashtest ./tests/serve_file.bashtest
-  - netcat -l -p 2274 -e ./bashttpd.sh &
-  - bashtest ./tests/serve_dir_list.bashtest
+
