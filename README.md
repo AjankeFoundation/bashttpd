@@ -1,7 +1,7 @@
 # BasHTTPd
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![GitHub version](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd.svg)](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd)
-![Jankiness](https://img.shields.io/badge/jankiness-very-orange.svg)
+![Jankiness](https://img.shields.io/badge/bash-3.2+-orange.svg)
 
 - [![Build Status](https://travis-ci.org/AjankeFoundation/bashttpd.svg?branch=master)](https://travis-ci.org/AjankeFoundation/bashttpd) for *Master* branch
 - [![Build Status](https://travis-ci.org/AjankeFoundation/bashttpd.svg?branch=develop)](https://travis-ci.org/AjankeFoundation/bashttpd) for *Develop* branch
