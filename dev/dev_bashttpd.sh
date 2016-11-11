@@ -291,10 +291,10 @@ parse_request() {
         ;;
     esac
     log_request_text "${_other_headers}"
-    [ -z "${_other_headers}" ] && \
-    break && log_debug_text "End of request headers found. Blank line read."
+    [ -z "${_other_headers}" ] && break 
     REQUEST_HEADERS+=( "${_other_headers}" )
   done
+    log_debug_text "End of request headers found. Blank line read."
     log_debug_text "REQUEST_HOST set to \"${REQUEST_HOST}\"."
 }
 
