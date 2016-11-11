@@ -1,5 +1,6 @@
 # BasHTTPd
 *A janky web server written in Bash*
+
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![GitHub version](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd.svg)](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd)
 ![Jankiness](https://img.shields.io/badge/bash-3.2+-orange.svg)
