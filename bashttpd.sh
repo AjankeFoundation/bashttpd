@@ -91,7 +91,7 @@ serve_file() {
     send_headers
     if [[ "${CONTENT_TYPE:0:4}" == "text" ]]; then
       while read -r _line; do
-        send_response_text 
+        send_response_text $_line
       done < "${FILE_PATH}"
     else
       cat "${FILE_PATH}" && log_binary_response
@@ -131,11 +131,7 @@ parse_request() {
   done
 }
 check_uri_path() { 
-  if [[ "${1}" == "" ]]; then
-    FILE_PATH=".${REQUEST_URI}"
-  else
-    FILE_PATH="${1}"
-  fi
+  FILE_PATH=".${REQUEST_URI}"
   FILE_PATH=${FILE_PATH//[^a-zA-Z0-9_~\-\.\/]/}
   FILE_PATH="${FILE_PATH%%/}"
   if [[ $FILE_PATH == *..* ]]; then

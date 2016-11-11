@@ -42,8 +42,8 @@
 
 # Some versions of netcat direct stdout AND stderr to the client.
 # You can turn off logging by setting LOG to "0".
-  LOG=1
-  #LOG=0
+  LOG=0
+  #LOG=1
 
 #---------------------------------#
 # TIER 1: DATA DELIVERY FUNCTIONS |
@@ -300,12 +300,7 @@ parse_request() {
 # It determines if the file path requried exists, and are accessible.
 check_uri_path() { 
   log_debug_text "check_uri_path() invoked."
-  log_debug_text "Argument 1: \"${1}\"."
-  if [[ "${1}" == "" ]]; then
-    FILE_PATH=".${REQUEST_URI}"
-  else
-    FILE_PATH="${1}"
-  fi
+  FILE_PATH=".${REQUEST_URI}"
   log_debug_text "FILE_PATH set to \"${FILE_PATH}\"."
   FILE_PATH=${FILE_PATH//[^a-zA-Z0-9_~\-\.\/]/}
   log_debug_text "Front of FILE_PATH sanitized of wildcard characters."
@@ -338,20 +333,20 @@ check_uri_path() {
       set_response_code_to 400
       send_headers
     else
-      log_debug_text "File path \"${FILE_PATH}\" is a regular file."
       FILE_TYPE="file"
-      log_debug_text "FILE_TYPE set to \"${FILE_TYPE}\"."
     fi
+  log_debug_text "FILE_TYPE set to \"${FILE_TYPE}\"."
+  log_debug_text "File path \"${FILE_PATH}\" is a regular file."
   log_debug_text "File path \"${FILE_PATH}\" is a directory."
   elif [[ ! -x "${FILE_PATH}" ]]; then
     log_debug_text "Directory \"${FILE_PATH}\" is not executable."
     set_response_code_to 404
     send_headers
   else
-    log_debug_text "Directory \"${FILE_PATH}\" is executable."
     FILE_TYPE="directory"
-    log_debug_text "FILE_TYPE set to \"${FILE_TYPE}\"."
   fi
+  log_debug_text "Directory \"${FILE_PATH}\" is executable."
+  log_debug_text "FILE_TYPE set to \"${FILE_TYPE}\"."
   log_debug_text "FILE_PATH and FILE_TYPE are ready for use by functions."
 }
 
