@@ -121,6 +121,9 @@ HTTP protocol support
   - 403: Returned when a file is inaccessible to the user that ran the script.
   - 400: Returned when the first word of the first HTTP request line is not `GET` or `HEAD`.
   - 200: Returned with valid content.
+  
+Contributing
+---------------------
 
 As always, your patches/pull requests are welcome! Please make feature suggestions or pull requests on the `develop` branch. The project uses `git-flow-AVH`, and in turn, the Vincent Driessen's git workflow model for software development. You can read more about it here:
 
