@@ -88,8 +88,8 @@
   send_response_text() { 
     if [[ "${LOG}" == "1" ]]; then
       echo "   S> $@" >&2
-      printf '%s\r\n' "$*"
     fi
+    printf '%s\r\n' "$*"
   }
 
 # log_binary_response() logs when binary is sent as a response body.
@@ -268,18 +268,16 @@ parse_request() {
   log_debug_text " REQUEST_METHOD set to \"${REQUEST_METHOD}\"."
   log_debug_text " REQUEST_URI set to \"${REQUEST_URI}\"."
   log_debug_text " REQUEST_HTTP_VERSION set to \"${REQUEST_HTTP_VERSION}\"."
-  if [[ -n "$REQUEST_METHOD" ]] && [[ -n "$REQUEST_URI" ]] && [[ -n "$REQUEST_HTTP_VERSION" ]]; then
-    log_debug_text "First line request header values are all non-null, continuing."
-  else
+  if [[ ! -n "$REQUEST_METHOD" ]] || [[ ! -n "$REQUEST_URI" ]] || [[ ! -n "$REQUEST_HTTP_VERSION" ]]; then
     set_response_code_to 400
     send_headers
   fi  
-  if [[ "$REQUEST_METHOD" = "GET" ]]; then 
-    log_debug_text "Method is supported, continuing."
-  else
+  log_debug_text "First line request header values are all non-null, continuing."
+  if [[ "$REQUEST_METHOD" != "GET" ]]; then 
     set_response_code_to 405
     send_headers
   fi
+  log_debug_text "Method is supported, continuing."
   while read -r _other_headers; do
     _other_headers=${_other_headers%%$'\r'}
     case $_other_headers in

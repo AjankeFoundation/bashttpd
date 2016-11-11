@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
   if [[ "$UID" = "0" ]]; then
     log_error_text "WARNING: Do not run BasHTTPd as root; are you high?"
     exit 1
@@ -21,8 +21,8 @@
   send_response_text() { 
     if [[ "${LOG}" == "1" ]]; then
       echo "   S> $@" >&2
-      printf '%s\r\n' "$*"
     fi
+    printf '%s\r\n' "$*"
   }
   log_binary_response() { 
     echo "> <<< Transmitted some terminal-unfriendly binary data >>>" >&2
@@ -107,13 +107,11 @@ parse_request() {
   _request_line=${_request_line%%$'\r'}
   log_request_text "${_request_line}"
   read -r REQUEST_METHOD REQUEST_URI REQUEST_HTTP_VERSION <<<"${_request_line}"
-  if [[ -n "$REQUEST_METHOD" ]] && [[ -n "$REQUEST_URI" ]] && [[ -n "$REQUEST_HTTP_VERSION" ]]; then
-  else
+  if [[ ! -n "$REQUEST_METHOD" ]] || [[ ! -n "$REQUEST_URI" ]] || [[ ! -n "$REQUEST_HTTP_VERSION" ]]; then
     set_response_code_to 400
     send_headers
   fi  
-  if [[ "$REQUEST_METHOD" = "GET" ]]; then 
-  else
+  if [[ "$REQUEST_METHOD" != "GET" ]]; then 
     set_response_code_to 405
     send_headers
   fi
