@@ -125,9 +125,7 @@ HTTP protocol support
 Contributing
 ---------------------
 
-As always, your patches/pull requests are welcome! Please make feature suggestions or pull requests on the `develop` branch. The project uses `git-flow-AVH`, and in turn, the Vincent Driessen's git workflow model for software development. You can read more about it here:
-
-http://nvie.com/posts/a-successful-git-branching-model/
+As always, your patches/pull requests are welcome! Please make feature suggestions or pull requests on the `develop` branch. The project uses `git-flow-AVH`, and in turn, the Vincent Driessen's git workflow model for software development. You can read more about it [here](http://nvie.com/posts/a-successful-git-branching-model/).
 
 Testimonials
 ------------
@@ -137,3 +135,9 @@ Testimonials
 
     "What is that? Wait a server written in bash. What an abomination!"
                                                       - anonymous "fan"
+                                                      
+    "With BasHTTPd, I was able to increase security 10-fold on my RHEL3 whitebox server. 
+     Without all those viruses, I was able to pack another 100 websites onto my server,
+     and decline my hosting provider's expensive Raspberry Pi upsell for another year;
+     Thanks Ajanke Foundation!"                         - Webmaster, slumlordhosting.com
+            
