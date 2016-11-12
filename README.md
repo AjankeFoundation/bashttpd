@@ -1,4 +1,6 @@
 # BasHTTPd
+*A janky web server written in Bash*
+
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![GitHub version](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd.svg)](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd)
 ![Jankiness](https://img.shields.io/badge/bash-3.2+-orange.svg)
@@ -6,14 +8,12 @@
 - [![Build Status](https://travis-ci.org/AjankeFoundation/bashttpd.svg?branch=master)](https://travis-ci.org/AjankeFoundation/bashttpd) for *Master* branch
 - [![Build Status](https://travis-ci.org/AjankeFoundation/bashttpd.svg?branch=develop)](https://travis-ci.org/AjankeFoundation/bashttpd) for *Develop* branch
 
-## *A janky web server written in Bash*
-
 Requirements
 -------------
 
   1. `bash` (v3 or higher) This ships with most OSes, including MacOSX.
   2. The `cat` and `ls` commands; no options/flags needed.
-  3. `tcpserver`, `socat`, or `netcat` to handle tcp connections 
+  3. `tcpserver`, `socat`, or `netcat` to handle tcp connections (`tcpserver` is HIGHLY recommended)
   4. A healthy dose of insanity
 
 Examples
@@ -47,6 +47,7 @@ Getting started
   
       If you're on MacOSX, the `tcpserver` binary/command is available via the `homebrew` package manager;
       the package name is `ucspi-tcp`; meanwhile, `netcat` should already be on your system. `socat` might be too.
+      Please note, `tcpserver` has been the most reliable, fully featured, and cross-OS compatible of the three TCP engines.
       
       If you are installing on RHEL or Debian, the `ucspi-tcp` package is available via EPEL and the base repos, respectively.
 
@@ -72,11 +73,11 @@ Getting started
           
   3. Make sure the script is executable. May vary by unices, this works on most:
   
-          chmod 664 ./bashttpd
+          chmod 664 ./bashttpd.sh
   
   4. Run bashttpd using your TCP server of choice:
   
-          tcpserver 127.0.0.1 2274 ./bashttpd.sh
+          tcpserver 127.0.0.1 2274 ./bashttpd.sh   #RECOMMENDED CHOICE
 
       OR 
 
@@ -120,16 +121,23 @@ HTTP protocol support
   - 403: Returned when a file is inaccessible to the user that ran the script.
   - 400: Returned when the first word of the first HTTP request line is not `GET` or `HEAD`.
   - 200: Returned with valid content.
+  
+Contributing
+---------------------
 
-As always, your patches/pull requests are welcome!
+As always, your patches/pull requests are welcome! Please make feature suggestions or pull requests on the `develop` branch. The project uses `git-flow-AVH`, and in turn, the Vincent Driessen's git workflow model for software development. You can read more about it [here](http://nvie.com/posts/a-successful-git-branching-model/).
 
 Testimonials
 ------------
 
-*"If anyone installs that anywhere, they might meet a gruesome end with a rusty fork"*
+    "If anyone installs that anywhere, they might meet a gruesome end with a rusty fork"
+                                                              - Avleen, BasHTTPd Creator
 
-  ***--- avleen, BasHTTPd Creator***
-
-*"What is that? Wait a server written in bash. What an abomination!"*
-
-  ***--- anonymous "fan"***
+    "What is that? Wait a server written in bash. What an abomination!"
+                                                      - anonymous "fan"
+                                                      
+    "With BasHTTPd, I was able to increase security 10-fold on my RHEL3 whitebox server. 
+     Without all those viruses, I was able to pack another 100 websites onto my server,
+     and decline my hosting provider's expensive Raspberry Pi upsell for another year;
+     Thanks Ajanke Foundation!"                         - Webmaster, slumlordhosting.com
+            
