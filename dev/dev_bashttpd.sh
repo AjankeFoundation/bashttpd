@@ -219,7 +219,7 @@ serve_file() {
         CONTENT_TYPE="text/javascript"
         ;;
       *)
-        read -r CONTENT_TYPE < <(file -b --mime-type "${FILE_PATH}")
+        CONTENT_TYPE="application/octet-stream"
         ;;
     esac
     add_response_header "Content-Type" "${CONTENT_TYPE}"
