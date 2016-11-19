@@ -27,4 +27,4 @@ script:
   - bashtest ./tests/stop-tests/stop_bashttpd_fail.bashtest
 
  after_script:
-  - ps | egrep "(tcpserver|*bash*)" 
+  - ps 
