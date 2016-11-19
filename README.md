@@ -11,107 +11,100 @@
 Requirements
 -------------
 
-  1. `bash` (v3 or higher) This ships with most OSes, including MacOSX.
-  2. The `cat` and `ls` commands; no options/flags needed.
-  3. `tcpserver`, `socat`, or `netcat` to handle tcp connections (`tcpserver` is HIGHLY recommended)
-  4. A healthy dose of insanity
+  1. `bash` (v3.2, v4 preferred)
+  2. `bashttpd.sh`, `cat`, and `ls` are required, and a few other common utils are optional.
+  3. `tcpserver` as the TCP engine.
+  4. A healthy dose of insanity.
 
-Examples
+Example Usage
 ---------
 
-Output of `head ./bashttpd.sh`:
+    $ ./bashttpd start
+      [INFO] Attempting to start bashttpd3 with the following settings.
+      IP Address: 127.0.0.1
+      Port: 2274
+      Connection Limit: 16
+      Process ID: 37580
+      Document Root: /Users/codz/Documents
 
-    #!/usr/bin/env bash
-    #---------------------------#
-    # Ajanke BasHTTPd Webserver |
-    #----------------------------------------------------------------------
-    #
-    #  tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh
-    #  socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
-    #  netcat -l -p 2274 -e ./bashttpd.sh & #Set LOG=0 in script for netcat
-    #
-    #  A janky HTTP server written in Bash.
+    $ curl 127.0.0.1:2274/hello_world.html
+      <h1>Hello World!</h1>
 
-The example commands a the top of the script each starts `bashttpd.sh` and binds it port 2274. Make sure the script is executable first.
-After the server is running, you can access the contents of the directory you started it in, from your browser:
+Example Configurations
+---------
 
-    http://127.0.0.1:2274
+	# Bind bashttpd to local interface, port 2274, and background (bg/&) process; limit 16 conns
 
-Note that in the `netcat` example above, the web server will only accept a single connection, then close when the script exits. 
-This is only good for testing, and/or serving a single file. If you want the ability to navigate directories...`socat`/`tcpserver`.
+        	Bash v3: $ tcpserver -c 16 127.0.0.1 2274 ./bashttpd &
+        	Bash v4: $ ./bashttpd.sh start 
+		
+	# Bind bashttpd to a private network IP, port 2274, and bg process; no conn limit
+
+        	Bash v3: $ tcpserver 192.168.0.5 2274 ./bashttpd &
+        	Bash v4: $ ./bashttpd.sh start -i 192.168.0.5 -c 9999
+		
+	# Bind bashttpd to all interfaces, on port 80, both public & private, with a 32 conn limit; NOT recommended!
+
+        	Bash v3: $ tcpserver -c 32 0.0.0.0 80 ./bashttpd &
+        	Bash v4: $ ./bashttpd.sh -c 32 -i 0.0.0.0 -p 80
 
 Getting started
 ----------------
 
-  1. Download/copy `bashttpd.sh` and either `tcpserver` or `socat` (if you don't already have one). `netcat` can be used to demo it.
+  1. Download/copy `bashttpd.sh` and install `tcpserver`.
   
-      If you're on MacOSX, the `tcpserver` binary/command is available via the `homebrew` package manager;
-      the package name is `ucspi-tcp`; meanwhile, `netcat` should already be on your system. `socat` might be too.
-      Please note, `tcpserver` has been the most reliable, fully featured, and cross-OS compatible of the three TCP engines.
-      
-      If you are installing on RHEL or Debian, the `ucspi-tcp` package is available via EPEL and the base repos, respectively.
+      If you are installing on Debian, the `ucspi-tcp` package is available via the base repos.
 
-      Check for `netcat` with:
-      
-          which netcat
+	  apt-get update
+	  apt-get install ucspi-tcp
 
-      Make sure it has the "-e" (execute) flag:
-
-          netcat -help
-          
-      Install `tcpserver` and/or `socat` on MacOSX with:
+      If you are installing on Mac OS X:
       
           brew update
           brew install ucspi-tcp
-          brew install socat
           
   2. Make sure you have Bash v3 or higher. If not, install via your package manager.
   
-      Check your `bash` version like this:
-        
+          bash --version
+          brew install bash
           bash --version
           
-  3. Make sure the script is executable. May vary by unices, this works on most:
+  3. Make sure the script is executable, and in your document root.
   
           chmod 664 ./bashttpd.sh
+          mv ./bashttpd.sh ./your_docroot
   
-  4. Run bashttpd using your TCP server of choice:
+  4. Start ./bashttpd; this will differ based on bash version:
   
-          tcpserver 127.0.0.1 2274 ./bashttpd.sh   #RECOMMENDED CHOICE
+          Bash v3: tcpserver 127.0.0.1 2274 ./bashttpd.sh
+          Bash v4: ./bashttpd start
 
-      OR 
-
-          socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
-
-      OR         
-      
-          netcat -lp 2274 -e ./bashttpd.sh
-  
-  5. Test it in your browser or with curl by visiting the local URL
+  5. Test it in your browser or with curl by visiting the document root's URL
   
           http://127.0.0.1:2274
 
-      You should see the contents of that directory.
+     You should see the contents of your document root; bashttpd does not display an index file.
       
 Features
 ---------
 
   1. Shows directory listings
-  2. Renders plain text, HTML, CSS, and Javascript
-  3. Renders image files and downloads other files
+  2. Renders plain text, HTML, CSS, and Javascript files (i.e. full web pages)
+  3. Renders all images and other files supported by your browser if you have `file` installed
 
 Limitations
 ------------
 
-  1. Does not support authentication, but HTTPS can be done with `socat` and `openssl`
-  2. Only supports certain types of HTTP requests, (No POST, just GET & HEAD).
+  1. Does not support authentication
+  2. Only supports certain types of HTTP requests, (No POST, just GET & HEAD)
+  3. Does not display index files automatically, you must refer them directly in URL
 
 Security
 --------
 
   1. Do not use this in a public-facing environment.
   2. Do not use this in a production environment.
-  3. The script rejects POST requests.
+  3. The server rejects POST requests.
   4. Injection is always a threat, even though URI cleaning is performed.
 
 HTTP protocol support
