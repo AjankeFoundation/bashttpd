@@ -2,10 +2,6 @@
 #---------------------------#
 # Ajanke BasHTTPd Webserver |
 #----------------------------------------------------------------------
-#  
-#  tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh
-#  socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
-#  netcat -l -p 2274 -e ./bashttpd.sh & #Set LOG=0 in script for netcat
 #
 #  A janky HTTP server written in Bash.
 #  
@@ -76,7 +72,7 @@
     echo "      -p   port; bind basHTTPd to a tcp_port. Default is TCP port \"2274\" if unspecified."
     echo ""
     echo "    stop   [process_id]"
-    echo "           process_id is optional; default behavior is to stop all basHTTP daemons."       
+    echo "           process_id is optional; default behavior: stop all bashttpd processes."       
     echo ""
   }
 
@@ -139,11 +135,11 @@
       log_debug_text "STOP_TARGET value initialized to \"${DAEMON_NAME}\" as default."
       log_debug_text "-k option parsed by getopts; STOP_SIG set to \"${STOP_SIG}\"."
       if [[ "${1}" == "" ]]; then
-        log_debug_text "\${OPTARG} determined to be empty. Value is: \"${OPTARG}\"; no PID provided to stop."
+        log_debug_text "\${!} determined to be empty. Value is: \"${1}\"; no PID provided to stop."
         STOP_TARGET="${DAEMON_NAME}"
         log_debug_text "No args to 'stop' found. STOP_TARGET set to DAEMON_NAME aka \"${DAEMON_NAME}\"."
       elif [[ ${1//[^0-9]/} > "1" ]]; then
-        log_debug_text "\${OPTARG} determined to be greater than PID 1. Value is: \"${OPTARG}\"; will stop PID \"${OPTARG}\"."
+        log_debug_text "\${1} determined to be greater than PID 1. Value is: \"${1}\"; will stop PID \"${1}\"."
         STOP_TARGET="${1}"
         log_debug_text "STOP_TARGET set to \"${STOP_TARGET}\"."
       elif [[ ${1//[^0-9]/} == "1" ]]; then
@@ -175,19 +171,19 @@
       exit 0
     elif [[ "${BASHTTPD_STOP}" == "1" ]] && [[ "${STOP_TARGET}" == "${DAEMON_NAME}" ]]; then
       log_debug_text "killall invoked."
-      killall ${STOP_TARGET} 2>/dev/null &&
-      echo "[SUCCESS] All instances of basHTTPd have now been stopped." &&
+      killall ${STOP_TARGET} 2>/dev/null && \
+      echo "[SUCCESS] All processes named \"${DAEMON_NAME}\" have been stopped." && \
       exit 0 || \
-      type killall >/dev/null &&
-      echo "[INFO] Unable to find \"${DAEMON_NAME}\" to terminate; exiting."
+      type killall >/dev/null && \
+      echo "[INFO] Unable to find \"${DAEMON_NAME}\" to terminate; exiting." && \
       exit 1
     else
       log_debug_text "kill invoked."
       log_debug_text "STOP_SIG is set to \"${STOP_SIG}\" and STOP_TARGET is set to \"${STOP_TARGET}\"."
-      kill ${STOP_TARGET} 2>/dev/null &&
-      echo "[SUCCESS] SIGTERM sent to process ID \"${STOP_TARGET}\"."
+      kill ${STOP_TARGET} 2>/dev/null && \
+      echo "[SUCCESS] SIGTERM sent to process ID \"${STOP_TARGET}\"." && \
       exit 0 || \
-      echo "[FAILURE] No process ID \"${STOP_TARGET}\" found; exiting."
+      echo "[FAILURE] No process ID \"${STOP_TARGET}\" found; exiting." && \
       exit 1
     fi
   }
