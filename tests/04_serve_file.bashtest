@@ -1,3 +1,4 @@
+$ curl -s 127.0.0.1:2274/tests/files/index.html; echo "exit code ${?}"
 <!DOCTYPE html>
 <html>
 <body>
@@ -8,4 +9,4 @@ Here is a jpeg: <br>
 <img src="./gnu.jpeg" alt="GNU">
 
 </body>
-</html> 
+exit code 0
