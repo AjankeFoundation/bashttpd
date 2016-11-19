@@ -1,3 +1,0 @@
-$ ./bashttpd.sh stop; echo "exit code: ${?}"
-[SUCCESS] All instances of basHTTPd have now been stopped.
-exit code: 0
