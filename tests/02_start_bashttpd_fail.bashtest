@@ -1,0 +1,3 @@
+$ ./bashttpd.sh start >/dev/null
+tcpserver: fatal: unable to bind: address already used
+

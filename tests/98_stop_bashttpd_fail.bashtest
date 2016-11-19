@@ -1,0 +1,5 @@
+$ ./bashttpd.sh stop; echo "exit code: ${?}"
+[INFO] Unable to find "bashttpd3" to terminate; exiting.
+
+exit code: 1
+

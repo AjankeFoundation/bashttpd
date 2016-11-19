@@ -1,0 +1,12 @@
+$ ./bashttpd.sh; echo "exit code: ${?}"
+Usage: bashttpd starts (or stops) a basHTTPd server in the current working directory
+
+    start  [-c conn_max] [-i ip_address] [-p tcp_port]
+      -c   connection limit; sets max connections. Default is "16" if unspecified.
+      -i   ip; bind basHTTPd to an ip_address. Default is "127.0.0.1" if unspecified.
+      -p   port; bind basHTTPd to a tcp_port. Default is TCP port "2274" if unspecified.
+
+    stop   [process_id]
+           process_id is optional; default behavior is to stop all basHTTP daemons.
+
+exit code: 1

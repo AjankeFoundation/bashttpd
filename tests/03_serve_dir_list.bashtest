@@ -1,0 +1,6 @@
+$ curl -s 127.0.0.1:2274/tests/files/; echo "exit code: ${?}"
+<h1>Contents of ./tests/files:</h1>
+<h3><a href=http://127.0.0.1:2274/tests/files/gnu.jpeg>gnu.jpeg</a></h3>
+<h3><a href=http://127.0.0.1:2274/tests/files/gnu.svg>gnu.svg</a></h3>
+<h3><a href=http://127.0.0.1:2274/tests/files/index.html>index.html</a></h3>
+exit code: 0
