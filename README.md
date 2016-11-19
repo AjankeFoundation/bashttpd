@@ -33,15 +33,15 @@ Example Usage
 Example Configurations
 ---------
 
-    - Bind bashttpd to local interface, port 2274, and background (bg/&) process; limit 16 conns
-	   Bash v3: $ tcpserver -c 16 127.0.0.1 2274 ./bashttpd &
-	   Bash v4: $ ./bashttpd.sh start 
-    - Bind bashttpd to a private network IP, port 2274, and bg process; no conn limit
-	   Bash v3: $ tcpserver 192.168.0.5 2274 ./bashttpd &
-	   Bash v4: $ ./bashttpd.sh start -i 192.168.0.5 -c 9999
-    - Bind bashttpd to all interfaces, on port 80, both public & private, with a 32 conn limit; NOT recommended!
-	   Bash v3: $ tcpserver -c 32 0.0.0.0 80 ./bashttpd &
-	   Bash v4: $ ./bashttpd.sh -c 32 -i 0.0.0.0 -p 80
+- Bind bashttpd to local interface, port 2274, and background (bg/&) process; limit 16 conns
+        Bash v3: $ tcpserver -c 16 127.0.0.1 2274 ./bashttpd &
+        Bash v4: $ ./bashttpd.sh start 
+- Bind bashttpd to a private network IP, port 2274, and bg process; no conn limit
+        Bash v3: $ tcpserver 192.168.0.5 2274 ./bashttpd &
+        Bash v4: $ ./bashttpd.sh start -i 192.168.0.5 -c 9999
+- Bind bashttpd to all interfaces, on port 80, both public & private, with a 32 conn limit; NOT recommended!
+        Bash v3: $ tcpserver -c 32 0.0.0.0 80 ./bashttpd &
+        Bash v4: $ ./bashttpd.sh -c 32 -i 0.0.0.0 -p 80
 
 Getting started
 ----------------
@@ -61,18 +61,18 @@ Getting started
   2. Make sure you have Bash v3 or higher. If not, install via your package manager.
   
           bash --version
-	  brew install bash
-	  bash --version
+          brew install bash
+          bash --version
           
   3. Make sure the script is executable, and in your document root.
   
           chmod 664 ./bashttpd.sh
-	  mv ./bashttpd.sh ./your_docroot
+          mv ./bashttpd.sh ./your_docroot
   
   4. Start ./bashttpd; this will differ based on bash version:
   
           Bash v3: tcpserver 127.0.0.1 2274 ./bashttpd.sh
-	  Bash v4: ./bashttpd start
+          Bash v4: ./bashttpd start
 
   5. Test it in your browser or with curl by visiting the document root's URL
   
