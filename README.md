@@ -11,11 +11,11 @@
 Requirements
 -------------
 
-  1. `bash` (v3.2, v4 preferred)
-  2. `bashttpd.sh`, `cat`, and `ls` are required, and a few other common utils are optional.
-  3. `tcpserver` as the TCP engine.
-  4. A healthy dose of insanity.
-
+   1. `bash` (v3.2 required, v4 preferred) and a handful of POSIX utils
+   2. `bashttpd.sh` to listen for requests
+   3. `tcpserver` to bind it to a port
+   4. A healthy dose of insanity :-D
+  
 Example Usage
 ---------
 
@@ -114,6 +114,15 @@ HTTP protocol support
   - 403: Returned when a file is inaccessible to the user that ran the script.
   - 400: Returned when the first word of the first HTTP request line is not `GET` or `HEAD`.
   - 200: Returned with valid content.
+  
+Graceful Degredation
+----------
+
+The server uses the concept of graceful degradation to gracefully downgrade it's features when needed. It uses a small handful of POSIX-compliant utilities with a limited amount of flags (if any) to accomplish things behind the scenes. If a util is called that it is not installed, if it's able to: the server will use a less feature-rich variant of the util to accomplish a comparable result.
+
+Here is the current list of POSIX-compliant utils used by the server:
+
+`ps`  `cat`  `ls`  `file`  `killall` ...nothing too crazy
   
 Contributing
 ---------------------
