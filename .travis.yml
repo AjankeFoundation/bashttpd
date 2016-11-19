@@ -19,5 +19,5 @@ before_script:
   - type bashtest
   
 script:
-  - ./bashttpd start
+  - ./bashttpd.sh start
   - for test_file in $(ls ./tests/*.bashtest); do bashtest ./tests/${test_file}; done
