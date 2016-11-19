@@ -31,19 +31,184 @@
 
 # If root, warn and exit.
   if [[ "$UID" = "0" ]]; then
-    log_error_text "WARNING: Do not run BasHTTPd as root; are you high?"
+    log_error_text "root? Just what do you think you are doing, Dave?"
     exit 1
   fi
 
 # If you decide to tweak the script, feel free to turn on debugging.
 # Just set DEBUG to "1" to turn it on; debug writes to stderr.
-  DEBUG=0
-  #DEBUG=1
+  #DEBUG=0
+  DEBUG=1
 
-# Some versions of netcat direct stdout AND stderr to the client.
+# log_debug_text() is used when debug mode is on
+  log_debug_text() { 
+    if [[ "${DEBUG}" == "1" ]]; then
+      echo " <I> $@" >&2
+    fi
+  }
+
 # You can turn off logging by setting LOG to "0".
-  LOG=0
-  #LOG=1
+  #LOG=0
+  LOG=1
+
+# The script's major version number is used throughout the script.
+  MAJ_VER=3
+
+
+#-------------------#
+# DAEMON CONTROLLER |
+#----------------------------------------------------------------------
+#
+#  This section sets up command line options for initial execution.
+#  These functions are skipped if the daemon forks to run children.
+#  'exec -a' changes the value of $0; allowing the skip upon fork.
+#
+#----------------------------------------------------------------------
+
+# Defines the Usage funciton for initial daemon init.
+  Usage() {
+    log_debug_text "Usage() invoked."
+    echo "Usage: bashttpd starts (or stops) a basHTTPd server in the current working directory"
+    echo ""
+    echo "    start  [-c conn_max] [-i ip_address] [-p tcp_port]"
+    echo "      -c   connection limit; sets max connections. Default is \"16\" if unspecified."
+    echo "      -i   ip; bind basHTTPd to an ip_address. Default is \"127.0.0.1\" if unspecified."
+    echo "      -p   port; bind basHTTPd to a tcp_port. Default is TCP port \"2274\" if unspecified."
+    echo ""
+    echo "    stop   [process_id]"
+    echo "           process_id is optional; default behavior is to stop all basHTTP daemons."       
+    echo ""
+  }
+
+
+# Defines get_opts() for option parsing if the value of $0 indicates that script was not forked from daemon.
+  get_opts() {
+    log_debug_text "get_opts() invoked."
+    # Parses 'start' subcommand's options, if applicable.
+    if [[ "${1}" == "start" ]]; then
+      # If Bash version is less than 4, instruct and exit.
+      if [[ ${BASH_VERSION:0:1} != 4 ]]; then
+        echo " Looks like you do not have Bash v4+; bashttpd will have to be started manually."
+        echo " Consider upgrading Bash via your package manager (e.g. for Mac OS X: 'brew install bash')."
+        echo " Alternately, you can invoke bashttpd manually by directly calling its TCP engine; examples:"
+        echo ' $ tcpserver -c 16 127.0.0.1 2274 ./bashttpd &'  
+        echo " ### Bind bashttpd to local interface, port 2274, and background (bg/&) process; limit 16 conns."
+        echo ' $ tcpserver 192.168.0.5 2274 ./bashttpd &'
+        echo " ### Bind bashttpd to a private network IP, port 2274, and bg process; no conn limit."
+        echo ' $ tcpserver 0.0.0.0 2274 ./bashttpd'
+        echo " ### Bind bashttpd to all interfaces, on port 2274, both public & private; NOT recommended!"
+        exit 1
+      fi
+      log_debug_text "start subcommand parsed."
+      BASHTTPD_START=1
+      log_debug_text "BASHTTPD_START set to \"${BASHTTPD_START}\""
+      log_debug_text "Current positional parameters are: \"${@}\"."
+      shift
+      log_debug_text "shift builtin invoked. New positional parameters are: \"${@}\"."
+      while getopts ":i:p:c:" opt; do
+        case "${opt}" in
+          i)
+            IP_ADDRESS="${OPTARG//[^a-zA-Z0-9\:\.]/}"
+            log_debug_text "\$IP_ADDRESS set to \"${OPTARG}\"."
+            ;;
+          p)
+            PORT="${OPTARG//[^0-9]/}"
+            log_debug_text "\$PORT set to \"${OPTARG}\"."
+            ;;
+          c)
+            CONN_MAX="${OPTARG//[^0-9]/}"
+            log_debug_text "\$CONN_MAX set to \"${OPTARG}\"."
+            ;;
+          *)
+            echo "Invalid option \"${opt}\" passed to \"${0} start\". See Usage."
+            log_debug_text "No valid options for start subcommand detected."
+            Usage
+            ;;
+        esac
+      done
+    fi
+
+    # Parses 'stop' subcommand's options, if applicable.
+    if [[ "${1}" == "stop" ]]; then
+      log_debug_text "stop subcommand parsed."
+      BASHTTPD_STOP=1
+      log_debug_text "BASHTTPD_STOP set to \"${BASHTTPD_STOP}\""
+      log_debug_text "Current positional parameters are: \"${@}\"."
+      shift
+      log_debug_text "shift builtin invoked. New positional parameters are: \"${@}\"."
+      log_debug_text "STOP_TARGET value initialized to \"${DAEMON_NAME}\" as default."
+      log_debug_text "-k option parsed by getopts; STOP_SIG set to \"${STOP_SIG}\"."
+      if [[ "${1}" == "" ]]; then
+        log_debug_text "\${OPTARG} determined to be empty. Value is: \"${OPTARG}\"; no PID provided to stop."
+        STOP_TARGET="${DAEMON_NAME}"
+        log_debug_text "No args to 'stop' found. STOP_TARGET set to DAEMON_NAME aka \"${DAEMON_NAME}\"."
+      elif [[ ${1//[^0-9]/} > "1" ]]; then
+        log_debug_text "\${OPTARG} determined to be greater than PID 1. Value is: \"${OPTARG}\"; will stop PID \"${OPTARG}\"."
+        STOP_TARGET="${1}"
+        log_debug_text "STOP_TARGET set to \"${STOP_TARGET}\"."
+      elif [[ ${1//[^0-9]/} == "1" ]]; then
+        echo "Stop process ID 1? I'm sorry, Dave; I'm afraid I can't do that."
+        exit 1
+      else
+        echo "Invalid process ID: \"${OPTARG//[^0-9]/}\"; exiting."
+        exit 1            
+      fi
+    fi
+  }
+
+# Checks to see if the process is a fork of the daemon; if not, the options are parsed and daemon is started.
+# Also checks to see if you're using Bash v3 or lower. If so, manual init instructions provided.
+  daemon_ctl() {
+    get_opts "$@"
+    if [[ "${BASHTTPD_START}" == "1" ]]; then
+      if [[ "${DEBUG}" != "1" ]]; then
+        exec -a ${DAEMON_NAME} tcpserver -c ${CONN_MAX:=16} ${IP_ADDRESS:=127.0.0.1} ${PORT:=2274} ${0} & 
+      else 
+        exec -a ${DAEMON_NAME} tcpserver -c ${CONN_MAX:=16} ${IP_ADDRESS:=127.0.0.1} ${PORT:=2274} ${0}
+      fi
+      echo "[INFO] Attempting to start ${DAEMON_NAME} with the following settings."
+      echo "IP Address: ${IP_ADDRESS:=127.0.0.1}"
+      echo "Port: ${PORT:=2274}"
+      echo "Connection Limit: ${CONN_MAX:=16}"
+      echo "Process ID: ${!}"
+      echo "Document Root: ${PWD}"
+      exit 0
+    elif [[ "${BASHTTPD_STOP}" == "1" ]] && [[ "${STOP_TARGET}" == "${DAEMON_NAME}" ]]; then
+      log_debug_text "killall invoked."
+      killall ${STOP_TARGET} 2>/dev/null &&
+      echo "[SUCCESS] All instances of basHTTPd have now been stopped." &&
+      exit 0 || \
+      type killall >/dev/null &&
+      echo "[INFO] Unable to find \"${DAEMON_NAME}\" to terminate; exiting."
+      exit 1
+    else
+      log_debug_text "kill invoked."
+      log_debug_text "STOP_SIG is set to \"${STOP_SIG}\" and STOP_TARGET is set to \"${STOP_TARGET}\"."
+      kill ${STOP_TARGET} 2>/dev/null &&
+      echo "[SUCCESS] SIGTERM sent to process ID \"${STOP_TARGET}\"."
+      exit 0 || \
+      echo "[FAILURE] No process ID \"${STOP_TARGET}\" found; exiting."
+      exit 1
+    fi
+  }
+
+# determines if this is a child of an already-started bashttp daemon or not.
+parse_ppid() {
+  DAEMON_NAME=bashttpd${MAJ_VER}
+  log_debug_text "DAEMON_NAME set to \"${DAEMON_NAME}\"."
+  PARENT_PROC="$(ps -p $PPID -o command)"
+  log_debug_text "PARENT_PROC set to \"${PARENT_PROC}\"."
+  log_debug_text "PARENT_PROC substring: \"${PARENT_PROC:8:${#DAEMON_NAME}}\"."
+  if [[ "${1}" == "start" ]] || [[ "${1}" == "stop" ]]; then
+    daemon_ctl "$@"
+  elif [[ "${PARENT_PROC:8:${#DAEMON_NAME}}" != "${DAEMON_NAME}" ]]; then
+    log_debug_text "PARENT_PROC substring: \"${PARENT_PROC:8:${#DAEMON_NAME}}\"."
+    log_debug_text "Substring equal to DAEMON_NAME; printing Usage and exiting."
+    Usage
+    exit 1
+  fi
+  log_debug_text "Substring not equal to DAEMON_NAME, continuing."
+}
 
 #---------------------------------#
 # TIER 1: DATA DELIVERY FUNCTIONS |
@@ -74,12 +239,6 @@
     fi
   }
 
-# log_debug_text() is used when debug mode is on
-  log_debug_text() { 
-    if [[ "${DEBUG}" == "1" ]]; then
-      echo " <I> $@" >&2
-    fi
-  }
 
 # send_response_text() receives a text stream. It passes one copy to stderr.
 # The other goes to the client as part of the HTTP response.
@@ -98,7 +257,9 @@
 # an exact copy of the binary file is transmitted to the client.
 # Bash will 
   log_binary_response() { 
-    echo "> <<< Transmitted some terminal-unfriendly binary data >>>" >&2
+    if [[ "${LOG}" == "1" ]]; then
+      echo "> <<< Transmitted some terminal-unfriendly binary data >>>" >&2
+    fi
   }
 
 #-------------------------------------#
@@ -125,7 +286,7 @@
   declare -a RESPONSE_HEADERS=(
     "Date: $(date +"%a, %d %b %Y %H:%M:%S %Z" 2>/dev/null)"
     "Connection: close"
-    "Server: Ajanke/2.0.0"
+    "Server: Ajanke/${MAJ_VER}"
   )
 
 # Function for appending new headers to header array
@@ -196,7 +357,7 @@ serve_dir_list() {
     add_response_header "Content-Type" "text/html"
     set_response_code_to 200
     send_headers
-    send_response_text "<h1>Contents of \"${FILE_PATH}\":</h1>"
+    send_response_text "<h1>Contents of ${FILE_PATH}:</h1>"
     while IFS=" " read -r _ls_output; do
       send_response_text "<h3><a href="http://${REQUEST_HOST}${FILE_PATH:1}/${_ls_output}">${_ls_output}</a></h3>"
     done < <(ls "${FILE_PATH}")
@@ -219,6 +380,7 @@ serve_file() {
         CONTENT_TYPE="text/javascript"
         ;;
       *)
+        read -r CONTENT_TYPE < <(file -b --mime-type "${FILE_PATH}") || \
         CONTENT_TYPE="application/octet-stream"
         ;;
     esac
@@ -358,7 +520,8 @@ check_uri_path() {
 #  Once everything is setup, this snippet gets the ball rolling.
 #
 #----------------------------------------------------------------------
-
+  
+  parse_ppid "$@"
   parse_request && check_uri_path
 
   if [[ "${FILE_TYPE}" == "directory" ]]; then

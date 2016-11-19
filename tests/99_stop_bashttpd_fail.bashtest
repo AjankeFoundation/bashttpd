@@ -1,0 +1,2 @@
+$ ./bashttpd.sh stop
+[SUCCESS] All instances of basHTTPd have now been stopped.
