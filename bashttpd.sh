@@ -18,7 +18,7 @@
     echo "      -p   port; bind basHTTPd to a tcp_port. Default is TCP port \"2274\" if unspecified."
     echo ""
     echo "    stop   [process_id]"
-    echo "           process_id is optional; default behavior: stop all bashttpd/tcpserver processes."       
+    echo "           process_id is optional; default behavior: stop all bashttpd processes."       
     echo ""
   }
   get_opts() {
@@ -87,8 +87,8 @@
       echo "Document Root: ${PWD}"
       exit 0
     elif [[ "${BASHTTPD_STOP}" == "1" ]] && [[ "${STOP_TARGET}" == "${DAEMON_NAME}" ]]; then
-      killall ${STOP_TARGET} tcpserver 2>/dev/null && \
-      echo "[SUCCESS] All processes named \"${DAEMON_NAME}\" and tcpserver have been stopped." && \
+      killall ${STOP_TARGET} 2>/dev/null && \
+      echo "[SUCCESS] All processes named \"${DAEMON_NAME}\" have been stopped." && \
       exit 0 || \
       type killall >/dev/null && \
       echo "[INFO] Unable to find \"${DAEMON_NAME}\" to terminate; exiting." && \

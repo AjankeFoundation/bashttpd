@@ -2,10 +2,6 @@
 #---------------------------#
 # Ajanke BasHTTPd Webserver |
 #----------------------------------------------------------------------
-#  
-#  tcpserver -c 10 127.0.0.1 2274 ./bashttpd.sh
-#  socat TCP4-LISTEN:2274,fork EXEC:./bashttpd.sh
-#  netcat -l -p 2274 -e ./bashttpd.sh & #Set LOG=0 in script for netcat
 #
 #  A janky HTTP server written in Bash.
 #  
@@ -76,7 +72,7 @@
     echo "      -p   port; bind basHTTPd to a tcp_port. Default is TCP port \"2274\" if unspecified."
     echo ""
     echo "    stop   [process_id]"
-    echo "           process_id is optional; default behavior: stop all bashttpd/tcpserver processes."       
+    echo "           process_id is optional; default behavior: stop all bashttpd processes."       
     echo ""
   }
 
@@ -175,8 +171,8 @@
       exit 0
     elif [[ "${BASHTTPD_STOP}" == "1" ]] && [[ "${STOP_TARGET}" == "${DAEMON_NAME}" ]]; then
       log_debug_text "killall invoked."
-      killall ${STOP_TARGET} tcpserver 2>/dev/null && \
-      echo "[SUCCESS] All processes named \"${DAEMON_NAME}\" and tcpserver have been stopped." && \
+      killall ${STOP_TARGET} 2>/dev/null && \
+      echo "[SUCCESS] All processes named \"${DAEMON_NAME}\" have been stopped." && \
       exit 0 || \
       type killall >/dev/null && \
       echo "[INFO] Unable to find \"${DAEMON_NAME}\" to terminate; exiting." && \
