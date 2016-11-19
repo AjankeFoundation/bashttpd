@@ -1,2 +1,4 @@
-$ ./bashttpd.sh stop
-[SUCCESS] All instances of basHTTPd have now been stopped.
+$ ./bashttpd.sh stop; echo "exit code: ${?}"
+[INFO] Unable to find "bashttpd3" to terminate; exiting.
+
+exit code: 1
