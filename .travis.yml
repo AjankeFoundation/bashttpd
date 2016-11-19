@@ -26,5 +26,5 @@ script:
   - ./bashttpd.sh stop
   - bashtest ./tests/stop-tests/stop_bashttpd_fail.bashtest
 
- after_script:
-  - ps 
+after_failure:
+  - ps
