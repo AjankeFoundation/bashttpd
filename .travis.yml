@@ -13,6 +13,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]];then sudo apt-get install ucspi-tcp; fi
   - sudo easy_install bashtest
   - chmod +x ./bashttpd.sh
+  - chmod +x ./tests/execute_tests.sh
   
 before_script:
   - type tcpserver
@@ -20,4 +21,4 @@ before_script:
   
 script:
   - ./bashttpd.sh start
-  - for test_file in $(ls ./tests/*.bashtest); do bashtest ./tests/${test_file}; done
+  - ./tests/execute_tests.sh
