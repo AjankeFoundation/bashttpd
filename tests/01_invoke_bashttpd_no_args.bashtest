@@ -7,6 +7,7 @@ Usage: bashttpd starts (or stops) a basHTTPd server in the current working direc
       -p   port; bind basHTTPd to a tcp_port. Default is TCP port "2274" if unspecified.
 
     stop   [process_id]
-           process_id is optional; default behavior is to stop all basHTTP daemons.
+           process_id is optional; default behavior: stop all bashttpd/tcpserver processes.
 
 exit code: 1
+
