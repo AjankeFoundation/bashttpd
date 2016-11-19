@@ -23,8 +23,4 @@ script:
   - ./bashttpd.sh start
   - bashtest ./tests/start-tests/start_bashttpd_fail.bashtest
   - ./execute_tests.sh
-  - ./bashttpd.sh stop
-  - bashtest ./tests/stop-tests/stop_bashttpd_fail.bashtest
 
-after_failure:
-  - ps
