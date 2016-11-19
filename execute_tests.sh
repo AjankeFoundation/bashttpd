@@ -2,7 +2,7 @@
 error_count=0
 for test_file in $(ls ./tests/*.bashtest); do	
     echo "running: \"${test_file}\""
-    bashtest ${test_file} || error_count++
+    bashtest ${test_file} || let "error_count++"
     echo ""
 done
 
