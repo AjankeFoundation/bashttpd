@@ -6,6 +6,7 @@ language:
   - bash
 
 before_install:
+  - uname -mp
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update; fi
 install:
