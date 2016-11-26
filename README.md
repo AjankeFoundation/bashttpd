@@ -1,9 +1,10 @@
 # BasHTTPd
 *A janky web server written in Bash*
 
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
+![GitHub license](https://img.shields.io/badge/license-MIT-green.svg)
 [![GitHub version](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd.svg)](https://badge.fury.io/gh/AjankeFoundation%2Fbashttpd)
-![Jankiness](https://img.shields.io/badge/bash-3.2+-orange.svg)
+![Bash version](https://img.shields.io/badge/bash-3.2+-green.svg)
+[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/AjankeFoundation/TurtleLair)
 
 - [![Build Status](https://travis-ci.org/AjankeFoundation/bashttpd.svg?branch=master)](https://travis-ci.org/AjankeFoundation/bashttpd) for *Master* branch
 - [![Build Status](https://travis-ci.org/AjankeFoundation/bashttpd.svg?branch=develop)](https://travis-ci.org/AjankeFoundation/bashttpd) for *Develop* branch
