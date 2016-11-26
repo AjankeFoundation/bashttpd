@@ -24,3 +24,11 @@ script:
   - bashtest ./tests/start-tests/start_bashttpd_fail.bashtest
   - ./execute_tests.sh
 
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/61d702617ab6b5af8364
+    on_success: always
+    on_failure: always
+    on_start: never
+
