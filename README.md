@@ -33,17 +33,17 @@ Example Usage
 Example Configurations
 ---------
 
-  # Bind bashttpd to local interface, port 2274, and background (bg/&) process; limit 16 conns
+  # This binds `bashttpd` to the local interface on port 2274, and backgrounds (`bg`/`&`) the process; limits to 16 conns
 
           Bash v3: $ tcpserver -c 16 127.0.0.1 2274 ./bashttpd &
           Bash v4: $ ./bashttpd.sh start 
     
-  # Bind bashttpd to a private network IP, port 2274, and bg process; no conn limit
+  # This binds `bashttpd` to a private network IP on port 2274, and `bg`s the process; no conn limit
 
           Bash v3: $ tcpserver 192.168.0.5 2274 ./bashttpd &
           Bash v4: $ ./bashttpd.sh start -i 192.168.0.5 -c 9999
     
-  # Bind bashttpd to all interfaces, on port 80, both public & private, with a 32 conn limit; NOT recommended!
+  # This bind `bashttpd` to all interfaces on port 80, (both public & private), with a 32 conn limit; NOT recommended!
 
           Bash v3: $ tcpserver -c 32 0.0.0.0 80 ./bashttpd &
           Bash v4: $ ./bashttpd.sh -c 32 -i 0.0.0.0 -p 80
@@ -53,21 +53,21 @@ Getting started
 
   1. Download/copy `bashttpd.sh` and install `tcpserver`.
   
-      If you are installing on Debian, the `ucspi-tcp` package is available via the base repos.
+      If you are installing `tcpserver` on Debian, the `ucspi-tcp` package it comes in is available via the base repos.
 
-    apt-get update
-    apt-get install ucspi-tcp
+         apt-get update
+         apt-get install ucspi-tcp
 
-      If you are installing on Mac OS X:
+      If you are installing `tcpserver` on Mac OS X:
       
           brew update
           brew install ucspi-tcp
           
-  2. Make sure you have Bash v3 or higher. If not, install via your package manager.
+  2. Make sure you have Bash v3 or higher, Bash v4 is preferred. If not, you can install `bash` via Homebrew, `apt-get`, etc.
   
           bash --version
-          brew install bash
-          bash --version
+          brew install bash  # via Homebrew on MacOS
+          apt-get update & apt-get upgrade bash  # via apt-get on Debian-based systems
           
   3. Make sure the script is executable, and in your document root.
   
@@ -76,30 +76,33 @@ Getting started
   
   4. Start ./bashttpd; this will differ based on bash version:
   
-          Bash v3: tcpserver 127.0.0.1 2274 ./bashttpd.sh
-          Bash v4: ./bashttpd start
+          # Bash v3: 
+            tcpserver 127.0.0.1 2274 ./bashttpd.sh
+            
+          # Bash v4:
+            ./bashttpd start
 
-  5. Test it in your browser or with curl by visiting the document root's URL
+  5. Test it in your browser or with `curl` by visiting the document root's URL
   
           http://127.0.0.1:2274
 
-     You should see the contents of your document root; bashttpd does not display an index file.
+     You should see a content listing of your document root; bashttpd does not display an index file.
       
 Features
 ---------
 
   1. Shows directory listings
   2. Renders plain text, HTML, CSS, and Javascript files (i.e. full web pages)
-  3. Renders all images and other files supported by your browser if you have `file` installed
+  3. Renders all images and other files supported by your browser if you have the UNIX `file` util installed
 
 Limitations
 ------------
 
   1. Does not support authentication
-  2. Only supports certain types of HTTP requests, (No POST, just GET & HEAD)
+  2. Only supports certain types of HTTP requests, for safety reasons (No POST, just GET & HEAD)
   3. Does not display index files automatically, you must refer them directly in URL
 
-Security
+Warnings & Security
 --------
 
   1. Do not use this in a public-facing environment.
@@ -115,14 +118,16 @@ HTTP protocol support
   - 400: Returned when the first word of the first HTTP request line is not `GET` or `HEAD`.
   - 200: Returned with valid content.
   
-Graceful Degredation
+Graceful Degradation
 ----------
 
-The server uses the concept of graceful degradation to gracefully downgrade it's features when needed. It uses a small handful of POSIX-compliant utilities with a limited amount of flags (if any) to accomplish things behind the scenes. If a util is called that it is not installed, if it's able to: the server will use a less feature-rich variant of the util to accomplish a comparable result.
+The server uses the concept of graceful degradation to gracefully downgrade it's feature set, when needed. Some features make not be possible at times due to the fact that the server uses a small handful of utilities behind the scenes to accomplish certain things. If a util is called that it is not installed, the server will downgrade to a less feature-rich variant of the util to accomplish a comparable result. Sometimes this means using a more common UNIX util, sometimes it means switching to pure Bash. As a last resort, `bashttpd` will fail and provide a precise error message explaining what is missing from the system.
 
-Here is the current list of POSIX-compliant utils used by the server:
+Here is the current list of common UNIX utils used by the server:
 
-`ps`  `cat`  `ls`  `file`  `killall` ...nothing too crazy
+`ps`  `cat`  `ls`  `file`  `killall` 
+
+...see, nothing too crazy.
   
 Contributing
 ---------------------
